@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>木屋杂货铺</title>
+		<link href="style/header.css" rel="stylesheet" type="text/css">
+		<link href="style/main.css" rel="stylesheet" type="text/css">
+		<link href="style/alert.css" rel="stylesheet" type="text/css">
+		<script src="script/jquery-1.12.4.js" type="text/javascript"></script>
+		<script src="script/list.js" type="text/javascript"></script>
+		<script>
+			var list = [];				//商品列表（在script/list.js文件）
+			var level = 1;				//游戏等级（可手动更改）
+			var ratio = 1;				//价格倍率(自动更改)
+			var xgRatio = 1;			//限购倍率(自动更改)
+			var steamName = "佚名玩家";	//玩家名称（可手动更改）
+			$(document).ready(function(){
+				$(".level").val(level);					//将等级赋予到页面显示
+				$(".steamName").val(steamName);			//将游戏名称赋予到页面显示
+				function color(){						//刷新列表颜色
+					for(var i=0;i<$(".list").length;i++){
+						if(i%2==0){
+							$(".list").eq(i).children(".num").css("background","rgb(241, 239, 188)");
+							$(".list").eq(i).children(".name").css("background","rgb(173, 212, 119)");
+							$(".list").eq(i).children(".price").css("background","rgb(195, 225, 155)");
+							$(".list").eq(i).children(".shul").css("background","rgb(240, 207, 176)");
+							$(".list").eq(i).children(".all").css("background","rgb(247, 200, 190)");
+							$(".list").eq(i).children(".purch").css("background","rgb(201, 232, 234)");
+							$(".list").eq(i).children(".buy").css("background","rgb(246, 234, 186)");
+							$(".list").eq(i).children(".note").css("background","rgb(208, 208, 208)");
+						}else{
+							$(".list").eq(i).children(".num").css("background","rgb(249, 245, 218)");
+							$(".list").eq(i).children(".name").css("background","rgb(222, 238, 209)");
+							$(".list").eq(i).children(".price").css("background","rgb(235, 247, 209)");
+							$(".list").eq(i).children(".shul").css("background","rgb(247, 231, 215)");
+							$(".list").eq(i).children(".all").css("background","rgb(251, 227, 223)");
+							$(".list").eq(i).children(".purch").css("background","rgb(228, 244, 243)");
+							$(".list").eq(i).children(".buy").css("background","rgb(250, 244, 222)");
+							$(".list").eq(i).children(".note").css("background","rgb(235, 231, 232)");
+						}
+					}
+				}
+				function makeList(){					//根据数组生成列表
+					var List = $(".list:first").clone(true);
+					$(".list").remove();
+					List.insertBefore(".addblank");
+					for(var i=0;i<list.length;i++){
+						$(".list").eq(0).clone(true).show().insertBefore(".addblank");
+						$(".num").eq(i+1).html(i+1);
+						$(".name").eq(i+1).html(list[i][0]);
+						$(".price").eq(i+1).html(Math.round(list[i][1]*ratio));
+						$(".shul").eq(i+1).children("input").val(list[i][2]);
+						var allNum = Math.round(list[i][1]*ratio)*list[i][2];
+						$(".all").eq(i+1).html(Math.round(allNum));
+						var purch = Math.round(list[i][3]*xgRatio);
+						var Purch = purch;
+						var name = list[i][0];
+						if((name=="Cxx的尿不湿"||name=="Cxx的开裆裤")&&Purch>5){Purch=5;}		//设置物品上限值显示到列表
+						if(name=="移平地面"&&Purch>3){Purch=3;}									//
+						if(name=="任意书本"&&Purch>20){Purch=20;}								//
+						if(name=="铁"&&Purch>360){Purch=360;}									//
+						if(name=="黏土"&&Purch>144){Purch=144;}									//
+						if(name=="赌场公爵币"&&Purch>216){Purch=216;}							//
+						if(purch<=-1){purch="无上限"}else{purch="每日<font color='red'>"+Purch+"</font>件"}
+						$(".purch").eq(i+1).html(purch);
+						$(".note").eq(i+1).html(list[i][4]);
+						color();
+					}
+				}
+				makeList();
+				function leavePrice(){					//根据等级刷新单价和限购
+					steamName = $(".steamaName").val();
+					level = $(".level").val()*1;
+					if(level>600){
+						alert("等级最高只能为600级！");
+						level = 600;
+						$(".level").val(600);
+					}
+					ratio = 1* Math.pow(1.004,level-1);
+					xgRatio = 1* Math.pow(1.01,level-1);
+					makeList();
+				}
+				leavePrice();
+				$(".level").mousemove(function(){
+					leavePrice();
+				});
+				$(".level").keydown(function(){
+					setTimeout(function(){
+						leavePrice();
+					},100);
+				});
+				$(".shul-val").mousemove(function(){		//实时检测数量价格
+					var name = $(this).parent(".shul").prev().prev().text();
+					var shul = $(this).val();
+					var xb = $(this).parent(".shul").prev().prev().prev().text();
+					var xg = Math.round(list[xb-1][3]*xgRatio);
+					if((name=="Cxx的尿不湿"||name=="Cxx的开裆裤")&&xg>5){xg=5;}			//给尿不湿和开档裤设置限购上限为5
+					if(name=="移平地面"&&xg>3){xg=3;}									//给移平地面设置限购上限为3
+					if(name=="任意书本"&&xg>20){xg=20;}									//给书设置限购上限为20
+					if(name=="铁"&&xg>360){xg=360;}										//给铁设置限购上限为360
+					if(name=="黏土"&&xg>144){xg=144;}									//给黏土设置限购上限为144
+					if(name=="赌场公爵币"&&xg>216){xg=216;}	
+					if(shul>xg&&xg>0){
+						alert("数量不可以超过上限！当前物品可购买上限：每日"+xg+"件");
+						$(this).val(xg);
+					}
+					var price = $(this).parent(".shul").prev().text();
+					var allPrice = Math.round(shul*price);
+					$(this).parent(".shul").next().text(allPrice);
+				});
+				$(".shul-val").change(function(){
+					$(".shul-val").mousemove();
+				});
+				$(".shul-val").keydown(function(){
+					setTimeout(function(){
+						$(".shul-val").mousemove();
+					},100);
+				});
+				$(".clouse,.or-clouse").click(function(){	//关闭订单窗口
+					$(".blank").hide();
+				});
+				$(".coin").click(function(){				//购买商品并生成订单信息
+					var name = $(this).parent(".buy").prev().prev().prev().prev().prev().text();	//商品名称
+					var shul = $(this).parent(".buy").prev().prev().prev().children().val();		//购买数量
+					var price = $(this).parent(".buy").prev().prev().text();						//应付金额
+					var player = $(".steamName").val();												//玩家名称
+					var level = $(".level").val();													//玩家等级
+					var time = new Date();				//获取当前时间
+					var year = time.getFullYear();		//年
+					var mon = time.getMonth()+1;		//月
+					var day = time.getDate();			//日
+					var hour = time.getHours();			//时
+					var min = time.getMinutes();		//分
+					var sec = time.getSeconds();		//秒
+					if((name=="Cxx的尿不湿"||name=="Cxx的开裆裤")&&level<200){		//设置尿不湿和开裆裤购买等级限制200级
+						alert('对不起，此商品仅限200级以上玩家购买！');
+					}else if(name=="移平地面"&&level<50){							//设置移平地面购买等级限制50级
+						alert('对不起，此商品仅限50级以上玩家购买！');
+					}else{
+						$(".blank").show();
+						$(".or-playername").children("font").text(player);
+						$(".or-level").children("font").text(level);
+						$(".or-time").children("font").children(".date1").text(year+" 年 "+mon+" 月 "+day+" 日   ");
+						$(".or-time").children("font").children(".date2").text(hour+" 时 "+min+" 分 "+sec+" 秒   ");
+						$(".or-goods").children("font").text(name);
+						$(".or-shul").children("font").text(shul);
+						$(".or-price").children("span").text(Math.round(price*0.95));	//显示折扣价
+						$(".or-price").children("del").show().text(price);				//显示原价（删除线）
+					}
+				});
+			});
+		</script>
+		<style>
+			*{
+				margin: 0;
+				padding: 0;
+				font-family: "微软雅黑";
+			}
+			body{
+				background:linear-gradient(beige,pink);
+			}
+		</style>
+	</head>
+	<body>
+		<header>
+			<div class="head-back"></div>
+			<div class="tit-log">
+				<img src="image/title.png" style="position: absolute;left: 0;">
+				<div class="qqyy">
+					<div class="qq">QQ群：73202619</div>
+					<div class="yy">YY：863184</div>
+				</div>
+			</div>
+			<div class="title"><img src="image/muwu.png" style="position: absolute;left: 30px;top:15px;height:95px;"></div>
+			<div class="user">
+				<div class="player-name">
+					游戏名称：
+					<input type="text" class="steamName" value="">
+				</div>
+				<div class="player-level">
+					游戏等级：
+					<input type="text" class="level" value="">
+					<span>请输入真实有效的名称和等级</span>
+				</div>
+			</div>
+		</header>
+		<div class="main">
+			<div class="type">
+				<div class="num-tit tit">序号</div>
+				<div class="name-tit tit">商品/服务</div>
+				<div class="price-tit tit">单价</div>
+				<div class="shul-tit tit">数量</div>
+				<div class="all-tit tit">总价</div>
+				<div class="purch-tit tit">限购</div>
+				<div class="buy-tit tit">购买</div>
+				<div class="note-tit tit">说明</div>
+			</div>
+			<div class="list">
+				<div class="num">1</div>
+				<div class="name">???</div>
+				<div class="price">5.20</div>
+				<div class="shul"><input type="text" value="100" class="shul-val"></div>
+				<div class="all">520</div>
+				<div class="purch">每日100</div>
+				<div class="buy"><img src="image/coin.png" class="coin"></div>
+				<div class="note">无备注</div>
+			</div>
+			<div class="addblank"></div>
+		</div>
+		<div class="blank">
+			<div class="alert">
+				<div class="alert-tit">我的订单（10.27版本）<div class="clouse" title="关闭">✘</div></div>
+				<div class="notice">
+					<div class="tick">✔</div>
+					<span>下单成功！请将此窗口截图给管理员</span>
+				</div>
+				<div class="order">
+					<div class="or-playername">玩家名称：<font color="orange">彩色的小木屋超乖吖</font></div>
+					<div class="or-level">玩家等级：<font color="orange">520</font></div>
+					<div class="or-time">下单时间：<font color="dodgerblue"><span class="date1">2020 年 10 月 14 日</span> &nbsp;&nbsp;&nbsp; <span class="date2">17 时 25 分 57 秒</span></font></div>
+					<div class="or-goods">购买商品：<font color="green">祖父的学习妙药</font></div>
+					<div class="or-shul">购买数量：<font color="green">100</font></div>
+					<div class="or-price">需支付金额：<del style="display: none;color:brown;">123</del> <span>429996</span> CC币</div>
+					<div class="or-clouse">关闭页面</div>
+				</div>
+			</div>
+			
+		</div>
+	</body>
+</html>
