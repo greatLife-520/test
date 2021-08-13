@@ -1,0 +1,110 @@
+header{
+	width:1260px;
+	height: 120px;
+	margin: 0px auto;
+	background-image: url("../image/7dtd.png");
+	background-size: contain;
+	background-position: 0px 0px;
+	position: relative;
+}
+.tit-log{
+	box-sizing: border-box;
+	width:430px;
+	height: 100%;
+	line-height: 120px;
+	font-size: 40px;
+	text-align: center;
+	float: left;
+	background-size: cover;
+	background-position: 0px -7px;
+	position: relative;
+}
+.qqyy{
+	width:150px;
+	height: 100%;
+	box-sizing: border-box;
+	position: absolute;
+	right: 0px;
+}
+.qq{
+	font-size: 16px;
+	text-align: left;
+	line-height: 25px;
+	font-weight: bold;
+	margin-top: 35px;
+	color: blue;
+}
+.yy{
+	font-size: 16px;
+	text-align: left;
+	line-height: 25px;
+	font-weight: bold;
+	color: orangered;
+}
+.head-back{
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	left: 0;
+	top:0;
+	background:radial-gradient(rgba(255,255,255,0.5) 20%,beige 80%);
+	z-index: 0;
+}
+.title{
+	color:brown;
+	box-sizing: border-box;
+	width:400px;
+	height: 100%;
+	line-height: 120px;
+	font-size: 40px;
+	text-align: center;
+	background-image: url("../image/cp.png");
+	background-size: cover;
+	background-position: 0px -30px;
+	z-index: 2;
+	position: absolute;
+	left: 430px;
+}
+.user{
+	width:400px;
+	height: 100px;
+	box-sizing: border-box;
+	position: absolute;
+	right: 0;
+	top:10px;
+	color: 	orangered;
+	font-weight: bold;
+	text-shadow: 1px 1px 1px white;
+}
+.player-name{
+	box-sizing: border-box;
+	width:400px;
+	height: 50%;
+	line-height: 50px;
+	font-size: 22px;
+}
+.steamName{
+	width: 240px;
+	height: 30px;
+	font-size: 20px;
+	text-indent:10px;
+	border-radius: 10px;
+}
+.player-level{
+	box-sizing: border-box;
+	width:400px;
+	height: 50%;
+	line-height: 50px;
+	font-size: 22px;
+}
+.level{
+	width: 50px;
+	height: 30px;
+	font-size: 20px;
+	text-align: center;
+	border-radius: 10px;
+}
+.player-level>span{
+	font-size: 15px;
+	color: grey;
+}
